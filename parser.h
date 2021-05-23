@@ -1,4 +1,5 @@
 #include "symbol.h"
+#include "strings.h"
 
 class Parser {
 	ifstream& inputFile;
@@ -21,9 +22,19 @@ class Parser {
 	};
 	vector<Symbol> stack;
 	vector<Symbol> accepted;
+
+	vector<string> tokens;
+	int index = 0;
 	
 public:
-	Parser(ifstream& file) : inputFile(file) {}
+	Parser(ifstream& file) : inputFile(file) {
+		string txt;
+        while (file >> txt) {
+            tokens.push_back(txt);
+        }  
+        file.close();
+		stack.push_back(Symbol(nonTerminal::E, Type::NONTERM)); 
+	}
 	void parse();
 	terminal nextToken();
 	void printLM();
