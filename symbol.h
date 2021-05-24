@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 #include "enums.h"
+#include "strings.h"
+
 using namespace std;
 
 class Symbol {

@@ -9,5 +9,10 @@ int Symbol::getSymbol() {
 }
 
 void Symbol::printSymbol() {
-    
+    if (type == Type::TERM) {
+        cout << terminalStrings[symbol]; 
+    }
+    else {  // type is nonterminal / token
+        cout << tokenStrings[symbol]; 
+    }
 }

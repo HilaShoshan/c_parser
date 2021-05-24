@@ -1,9 +1,29 @@
 #include "parser.h"
 
 void Parser::parse() {
-    // string a = tokens.at(0);  // the first symbol of w 
-    for (int i = 0; i < 5; i++)
-        cout << nextToken() << endl;
+    terminal a = nextToken();  // the first symbol (nonterminal) of w 
+    Symbol X = stack.back();  // the top stack symbol
+    while (X.getSymbol() != terminal::END) {  // while stack is not empty
+        // cout << X.getSymbol() << " " << a << endl;
+        if (X.getType() == Type::TERM && X.getSymbol() == a) {
+            printLM();
+            stack.pop_back();
+            accepted.push_back(X); 
+            a = nextToken();  // the next symbol of w
+        }
+        else if(X.getType() == Type::TERM) throw "syntax‬‬ ‫‪error\n‬‬";
+        else if(table.at(X.getSymbol()).at(a) == -1)  // error entry
+            throw "syntax‬‬ ‫‪error\n‬‬";
+        else {  // table[X,a] = x -> Y1Y2...Yk
+            printLM();
+            vector<Symbol> production = rules.at(table.at(X.getSymbol()).at(a));
+            stack.pop_back();
+            for (Symbol s : production) {
+                stack.push_back(s);
+            }
+        }
+        X = stack.back();  // the top stack symbol
+    }
 }
 
 terminal Parser::nextToken() {
@@ -23,6 +43,15 @@ terminal Parser::nextToken() {
 }
 
 void Parser::printLM() {
-
+    for (Symbol a : accepted) {
+        a.printSymbol();
+        cout << " ";
+    }
+    cout << "| ";
+    for (auto it = stack.rbegin(); it != stack.rend(); it++) {  // print stack's items from the end to the start
+        it->printSymbol();
+        cout << " "; 
+    } 
+    cout << endl;
 }
 
