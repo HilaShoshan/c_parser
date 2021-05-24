@@ -4,18 +4,21 @@ void Parser::parse() {
     terminal a = nextToken();  // the first symbol (nonterminal) of w 
     Symbol X = stack.back();  // the top stack symbol
     while (X.getSymbol() != terminal::END) {  // while stack is not empty
-        // cout << "****** " << X.getType() << " " << X.getSymbol() << " " << a << endl;
+        printLM();
         if (X.getType() == Type::TERM && X.getSymbol() == a) {
-            printLM();
             stack.pop_back();
             accepted.push_back(X); 
             a = nextToken();  // the next symbol of w
         }
-        else if(X.getType() == Type::TERM) throw "syntax‬‬ ‫‪error\n‬‬";
-        else if(table.at(X.getSymbol()).at(a) == -1)  // error entry
-            throw "syntax‬‬ ‫‪error\n‬‬";
+        else if(X.getType() == Type::TERM) {
+            cout << "syntax error" << endl;
+            break;
+        }
+        else if(table.at(X.getSymbol()).at(a) == -1) { // error entry
+            cout << "syntax error" << endl;
+            break;
+        }
         else {  // table[X,a] = x -> Y1Y2...Yk
-            printLM();
             vector<Symbol> production = rules.at(table.at(X.getSymbol()).at(a));
             // cout << "number of rule: " << table.at(X.getSymbol()).at(a) << endl;
             stack.pop_back();
